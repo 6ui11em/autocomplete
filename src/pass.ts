@@ -1,3 +1,14 @@
+const appGenerator = (path: string): Fig.Generator => ({
+  script: `\ls -1 ${path}`,
+  postProcess: (out) => {
+    return out.split("\n").map((line) => ({
+      name: line,
+      icon: `fig://${path}/${line}`,
+      priority: line.endsWith(".app") && 76,
+    }));
+  },
+});
+
 const completionSpec: Fig.Spec = {
   name: "pass",
   description: "Bassic passwordstore.org autocomplete",
@@ -160,6 +171,7 @@ const completionSpec: Fig.Spec = {
     name: "path-names",
     description: "The path of the desired password",
     isOptional: true,
+    generators: appGenerator("~/.password-store"),
   },
 };
 export default completionSpec;
